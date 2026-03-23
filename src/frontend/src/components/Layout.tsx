@@ -113,12 +113,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <div className="text-secondary font-bold text-base leading-tight">
                 e GRAM PANCHAYAT GUJARAT
               </div>
-              <div className="text-primary font-semibold text-xs">
-                Online Service Centre
-              </div>
-              <div className="text-muted-foreground text-xs">
-                Moti Dugdol, Ta. Dhanera, Dist. Banaskantha
-              </div>
             </div>
           </Link>
           <div className="ml-auto flex items-center gap-2">

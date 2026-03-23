@@ -150,20 +150,6 @@ export default function Services() {
           ))}
         </div>
       </section>
-
-      {/* WhatsApp Contact Card */}
-      <div className="mt-10 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-6 text-white text-center">
-        <h3 className="font-bold text-xl mb-2">{t("whatsapp")}</h3>
-        <p className="text-white/80 mb-4">સેવા માટે WhatsApp પર સંપર્ક કરો</p>
-        <a href="https://wa.me/917874785814" target="_blank" rel="noreferrer">
-          <Button
-            className="bg-white text-green-700 hover:bg-green-50 font-bold"
-            data-ocid="services.whatsapp.button"
-          >
-            WhatsApp: 7874785814
-          </Button>
-        </a>
-      </div>
     </div>
   );
 }
