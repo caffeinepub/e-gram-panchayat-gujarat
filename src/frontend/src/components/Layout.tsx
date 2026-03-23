@@ -25,9 +25,11 @@ import AuthModal from "./AuthModal";
 const NAV_ITEMS = [
   { label: "Home", path: "/" },
   { label: "About", path: "/about" },
-  { label: "Contact Us", path: "/contact" },
+  { label: "Services", path: "/services" },
+  { label: "Gallery", path: "/gallery" },
+  { label: "Blog", path: "/blog" },
   { label: "Guides", path: "/forms" },
-  { label: "Smart-Learning", path: "/schemes" },
+  { label: "Contact Us", path: "/contact" },
 ] as const;
 
 const NEWS_ITEMS = [
@@ -381,10 +383,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </li>
               <li>
                 <Link
-                  to="/contact"
+                  to="/blog"
                   className="hover:text-brand-orange transition-colors"
                 >
-                  Privacy Policy
+                  Blog
                 </Link>
               </li>
               <li>
@@ -392,7 +394,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to="/contact"
                   className="hover:text-brand-orange transition-colors"
                 >
-                  Terms &amp; Conditions
+                  Contact Us
                 </Link>
               </li>
             </ul>

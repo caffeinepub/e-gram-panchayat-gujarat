@@ -1,13 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
+  Form,
   FormSubmission,
   GalleryItem,
   Post,
   Scheme,
   ServiceLink,
+  SiteInfo,
   UserProfile,
 } from "../backend.d";
-import { SubmissionStatus, UserRole } from "../backend.d";
+import { FormCategory, SubmissionStatus, UserRole } from "../backend.d";
 import { useActor } from "./useActor";
 
 export function useIsAdmin() {
@@ -139,6 +141,22 @@ export function useGalleryItems() {
   });
 }
 
+export function useAddGalleryItem() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      type: string;
+      blob: import("../backend").ExternalBlob;
+      caption: string;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.addGalleryItem(data.type, data.blob, data.caption);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["gallery"] }),
+  });
+}
+
 export function useDeleteGalleryItem() {
   const { actor } = useActor();
   const qc = useQueryClient();
@@ -175,6 +193,74 @@ export function useAllSchemes() {
   });
 }
 
+export function useAddScheme() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      title: string;
+      description: string;
+      category: string;
+      documentsRequired: string[];
+      applicationLink: string;
+      active: boolean;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.addScheme(
+        data.title,
+        data.description,
+        data.category,
+        data.documentsRequired,
+        data.applicationLink,
+        data.active,
+      );
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["schemes"] });
+    },
+  });
+}
+
+export function useEditScheme() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      id: bigint;
+      title: string;
+      description: string;
+      category: string;
+      documentsRequired: string[];
+      applicationLink: string;
+      active: boolean;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.editScheme(
+        data.id,
+        data.title,
+        data.description,
+        data.category,
+        data.documentsRequired,
+        data.applicationLink,
+        data.active,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["schemes"] }),
+  });
+}
+
+export function useDeleteScheme() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: bigint) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.deleteScheme(id);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["schemes"] }),
+  });
+}
+
 export function useServiceLinks() {
   const { actor, isFetching } = useActor();
   return useQuery<ServiceLink[]>({
@@ -184,6 +270,172 @@ export function useServiceLinks() {
       return actor.getAllServiceLinks();
     },
     enabled: !!actor && !isFetching,
+  });
+}
+
+export function useAddServiceLink() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      url: string;
+      category: string;
+      description: string;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.addServiceLink(
+        data.name,
+        data.url,
+        data.category,
+        data.description,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["serviceLinks"] }),
+  });
+}
+
+export function useEditServiceLink() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      id: bigint;
+      name: string;
+      url: string;
+      category: string;
+      description: string;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.editServiceLink(
+        data.id,
+        data.name,
+        data.url,
+        data.category,
+        data.description,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["serviceLinks"] }),
+  });
+}
+
+export function useDeleteServiceLink() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: bigint) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.deleteServiceLink(id);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["serviceLinks"] }),
+  });
+}
+
+export function useAllForms() {
+  const { actor, isFetching } = useActor();
+  return useQuery<Form[]>({
+    queryKey: ["forms", "all"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllForms();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useAddForm() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      title: string;
+      category: FormCategory;
+      description: string;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.addForm(
+        data.title,
+        data.category,
+        data.description,
+        0n,
+        [],
+        "",
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["forms"] }),
+  });
+}
+
+export function useEditForm() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      id: bigint;
+      title: string;
+      category: FormCategory;
+      description: string;
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.editForm(
+        data.id,
+        data.title,
+        data.category,
+        data.description,
+        0n,
+        [],
+        "",
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["forms"] }),
+  });
+}
+
+export function useDeleteForm() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: bigint) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.deleteForm(id);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["forms"] }),
+  });
+}
+
+export function useSiteInfo() {
+  const { actor, isFetching } = useActor();
+  return useQuery<SiteInfo | null>({
+    queryKey: ["siteInfo"],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getSiteInfo();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useUpdateSiteInfo() {
+  const { actor } = useActor();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      phone: string;
+      whatsapp: string;
+      email: string;
+      address: string;
+      socialLinks: string[];
+    }) => {
+      if (!actor) throw new Error("Not connected");
+      return actor.updateSiteInfo(
+        data.phone,
+        data.whatsapp,
+        data.email,
+        data.address,
+        data.socialLinks,
+      );
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["siteInfo"] }),
   });
 }
 
@@ -241,4 +493,4 @@ export function useSubmitForm() {
   });
 }
 
-export { SubmissionStatus };
+export { FormCategory, SubmissionStatus };
