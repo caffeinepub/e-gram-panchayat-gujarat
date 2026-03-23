@@ -2,29 +2,32 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
   Globe,
+  Instagram,
   LogOut,
   Mail,
   Menu,
+  MessageCircle,
   Phone,
+  Send,
   Settings,
+  Twitter,
   User,
   X,
+  Youtube,
 } from "lucide-react";
 import { useState } from "react";
+import { SiFacebook } from "react-icons/si";
 import { useLanguage } from "../context/LanguageContext";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useIsAdmin } from "../hooks/useQueries";
 import AuthModal from "./AuthModal";
 
 const NAV_ITEMS = [
-  { key: "home", path: "/" },
-  { key: "about", path: "/about" },
-  { key: "services", path: "/services" },
-  { key: "schemes", path: "/schemes" },
-  { key: "forms", path: "/forms" },
-  { key: "gallery", path: "/gallery" },
-  { key: "blog", path: "/blog" },
-  { key: "contact", path: "/contact" },
+  { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
+  { label: "Contact Us", path: "/contact" },
+  { label: "Guides", path: "/forms" },
+  { label: "Smart-Learning", path: "/schemes" },
 ] as const;
 
 const NEWS_ITEMS = [
@@ -40,7 +43,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
-  const { language, setLanguage, t } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const { identity, clear, isLoginSuccess } = useInternetIdentity();
   const { data: isAdmin } = useIsAdmin();
   const location = useLocation();
@@ -107,11 +110,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               className="w-14 h-14 object-contain"
             />
             <div>
-              <div className="text-secondary font-semibold text-sm">
-                e GRAM PANCHAYAT GUJARAT - Online Service Centre
+              <div className="text-secondary font-bold text-base leading-tight">
+                e GRAM PANCHAYAT GUJARAT
+              </div>
+              <div className="text-primary font-semibold text-xs">
+                Online Service Centre
               </div>
               <div className="text-muted-foreground text-xs">
-                Moti Dugdol, Ta. Dhanera, Dist. Banaskantha, Gujarat
+                Moti Dugdol, Ta. Dhanera, Dist. Banaskantha
               </div>
             </div>
           </Link>
@@ -126,7 +132,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       data-ocid="nav.admin.link"
                     >
                       <Settings className="w-3 h-3 mr-1" />
-                      {t("admin")}
+                      Admin
                     </Button>
                   </Link>
                 )}
@@ -137,7 +143,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   data-ocid="nav.logout.button"
                 >
                   <LogOut className="w-3 h-3 mr-1" />
-                  {t("logout")}
+                  Logout
                 </Button>
               </div>
             ) : (
@@ -149,7 +155,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   data-ocid="nav.login.button"
                 >
                   <User className="w-3 h-3 mr-1" />
-                  {t("login")}
+                  Login
                 </Button>
                 <Button
                   size="sm"
@@ -157,7 +163,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   onClick={() => openAuth("register")}
                   data-ocid="nav.register.button"
                 >
-                  {t("register")}
+                  Register
                 </Button>
               </div>
             )}
@@ -183,16 +189,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="hidden md:flex">
             {NAV_ITEMS.map((item) => (
               <Link
-                key={item.key}
+                key={item.label}
                 to={item.path}
-                data-ocid={`nav.${item.key}.link`}
-                className={`px-4 py-3 text-sm font-semibold uppercase tracking-wide transition-colors hover:bg-black/20 ${
+                data-ocid={`nav.${item.label.toLowerCase().replace(/[^a-z0-9]/g, "")}.link`}
+                className={`px-5 py-3 text-sm font-semibold tracking-wide transition-colors hover:bg-black/20 ${
                   location.pathname === item.path
                     ? "bg-black/30 border-b-2 border-white"
                     : ""
                 }`}
               >
-                {t(item.key as any)}
+                {item.label}
               </Link>
             ))}
           </div>
@@ -201,12 +207,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="md:hidden py-2">
               {NAV_ITEMS.map((item) => (
                 <Link
-                  key={item.key}
+                  key={item.label}
                   to={item.path}
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-2 text-sm font-semibold uppercase hover:bg-black/20"
+                  className="block px-4 py-2 text-sm font-semibold hover:bg-black/20"
                 >
-                  {t(item.key as any)}
+                  {item.label}
                 </Link>
               ))}
             </div>
@@ -229,9 +235,36 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Main Content */}
       <main className="flex-1">{children}</main>
 
+      {/* WhatsApp Channel Banner */}
+      <div className="whatsapp-channel-bg py-6 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-white">
+            <MessageCircle className="w-8 h-8 text-green-300 shrink-0" />
+            <div>
+              <div className="font-bold text-lg">Join Our WhatsApp Channel</div>
+              <div className="text-white/70 text-sm">
+                સૌ પ્રથમ સરકારી અપડેટ, નવા ફોર્મ, અને સેવા સૂચના WhatsApp પર
+              </div>
+            </div>
+          </div>
+          <a
+            href="https://whatsapp.com/channel/0029VaxXnP33WHTc9kTFQi2O"
+            target="_blank"
+            rel="noreferrer"
+            data-ocid="whatsapp.channel.button"
+          >
+            <Button className="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-2 rounded-full">
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Join WhatsApp Channel
+            </Button>
+          </a>
+        </div>
+      </div>
+
       {/* Footer */}
-      <footer className="footer-bg text-white mt-8">
+      <footer className="footer-bg text-white">
         <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <img
@@ -247,122 +280,281 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
             <p className="text-white/70 text-sm">
-              Moti Dugdol, Ta. Dhanera, Dist. Banaskantha, Gujarat
+              Moti Dugdol, Ta. Dhanera,
+              <br />
+              Dist. Banaskantha, Gujarat
             </p>
             <p className="text-white/70 text-sm mt-1">Online Service Centre</p>
+            {/* Social Media */}
+            <div className="mt-4">
+              <p className="text-xs text-white/60 mb-2">Follow Us:</p>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href="https://whatsapp.com/channel/0029VaxXnP33WHTc9kTFQi2O"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="WhatsApp Channel"
+                  className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center hover:bg-green-500 transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4 text-white" />
+                </a>
+                <a
+                  href="https://www.facebook.com/share/16rsNxQxZM/"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Facebook"
+                  className="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center hover:bg-blue-600 transition-colors"
+                >
+                  <SiFacebook className="w-4 h-4 text-white" />
+                </a>
+                <a
+                  href="https://www.instagram.com/digitalstore1983"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Instagram"
+                  className="w-8 h-8 rounded-full bg-pink-600 flex items-center justify-center hover:bg-pink-500 transition-colors"
+                >
+                  <Instagram className="w-4 h-4 text-white" />
+                </a>
+                <a
+                  href="https://twitter.com/motidugdolgp"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Twitter/X"
+                  className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center hover:bg-gray-700 transition-colors"
+                >
+                  <Twitter className="w-4 h-4 text-white" />
+                </a>
+                <a
+                  href="https://t.me/egrampanchayat_gujarat"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Telegram"
+                  className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center hover:bg-blue-400 transition-colors"
+                >
+                  <Send className="w-4 h-4 text-white" />
+                </a>
+                <a
+                  href="https://youtube.com/@veritasnews26"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="YouTube"
+                  className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center hover:bg-red-500 transition-colors"
+                >
+                  <Youtube className="w-4 h-4 text-white" />
+                </a>
+              </div>
+            </div>
           </div>
 
+          {/* Useful Links */}
           <div>
             <h3 className="font-bold text-brand-orange mb-3 uppercase text-sm">
-              Quick Links
+              Useful Links
             </h3>
-            <ul className="space-y-1.5 text-sm text-white/80">
-              {NAV_ITEMS.slice(0, 5).map((item) => (
-                <li key={item.key}>
-                  <Link
-                    to={item.path}
-                    className="hover:text-brand-orange transition-colors"
-                  >
-                    {t(item.key as any)}
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-2 text-sm text-white/80">
+              <li>
+                <Link
+                  to="/forms"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Guides
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/gallery"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Photo Gallery
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/services"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Terms &amp; Conditions
+                </Link>
+              </li>
             </ul>
           </div>
 
+          {/* Help & Support */}
           <div>
             <h3 className="font-bold text-brand-orange mb-3 uppercase text-sm">
-              Contact
+              Help &amp; Support
+            </h3>
+            <ul className="space-y-2 text-sm text-white/80">
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Disclaimer
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  How to Register
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://chat.whatsapp.com/Dwy2hkxhlFMKiCmOk3IMSR"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  WhatsApp Group
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="font-bold text-brand-orange mb-3 uppercase text-sm">
+              Contact Info
             </h3>
             <ul className="space-y-2 text-sm text-white/80">
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 shrink-0 text-brand-orange" />
-                <span>7874785814</span>
+                <span>
+                  <a href="tel:7874785814" className="hover:text-brand-orange">
+                    7874785814
+                  </a>
+                  <br />
+                  <span className="text-xs text-white/50">(24/7 Support)</span>
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 mt-0.5 shrink-0 text-brand-orange" />
-                <span className="break-all">cscservicedugdolgp@gmail.com</span>
+                <a
+                  href="mailto:cscservicedugdolgp@gmail.com"
+                  className="hover:text-brand-orange break-all"
+                >
+                  cscservicedugdolgp@gmail.com
+                </a>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-brand-orange text-base shrink-0">📍</span>
                 <span>
-                  Moti Dugdol, Ta. Dhanera, Dist. Banaskantha, Gujarat - 385310
+                  Moti Dugdol, Ta. Dhanera, Dist. Banaskantha, Gujarat
                 </span>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-brand-orange mb-3 uppercase text-sm">
-              Govt Links
-            </h3>
-            <ul className="space-y-1.5 text-sm text-white/80">
-              <li>
-                <a
-                  href="https://digitalgujarat.gov.in"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-brand-orange"
-                >
-                  Digital Gujarat
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://anyror.gujarat.gov.in"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-brand-orange"
-                >
-                  e-Dhara (Land Records)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://nrega.nic.in"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-brand-orange"
-                >
-                  NREGA Portal
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://pmayg.nic.in"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-brand-orange"
-                >
-                  PM Awas Yojana
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://uidai.gov.in"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-brand-orange"
-                >
-                  Aadhaar Services
-                </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="footer-bottom py-3 px-4 text-center">
-          <p className="text-sm text-white">
-            © {new Date().getFullYear()}. Built with ❤️ using{" "}
-            <a
-              href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
-              target="_blank"
-              rel="noreferrer"
-              className="underline hover:text-white/80"
-            >
-              caffeine.ai
-            </a>
-          </p>
+        {/* Footer Bottom */}
+        <div className="footer-bottom py-4 px-4">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-sm text-white">
+              © e GRAM PANCHAYAT GUJARAT All Rights Reserved
+            </p>
+            <div className="flex items-center gap-3">
+              <a
+                href="https://whatsapp.com/channel/0029VaxXnP33WHTc9kTFQi2O"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/70 hover:text-white"
+                aria-label="WhatsApp Channel"
+              >
+                <MessageCircle className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/16rsNxQxZM/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/70 hover:text-white"
+                aria-label="Facebook"
+              >
+                <SiFacebook className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.instagram.com/digitalstore1983"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/70 hover:text-white"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://twitter.com/motidugdolgp"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/70 hover:text-white"
+                aria-label="Twitter"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a
+                href="https://youtube.com/@veritasnews26"
+                target="_blank"
+                rel="noreferrer"
+                className="text-white/70 hover:text-white"
+                aria-label="YouTube"
+              >
+                <Youtube className="w-5 h-5" />
+              </a>
+            </div>
+            <p className="text-xs text-white/50">
+              Built with ❤️ using{" "}
+              <a
+                href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="underline hover:text-white/80"
+              >
+                caffeine.ai
+              </a>
+            </p>
+          </div>
         </div>
       </footer>
 
